@@ -1,6 +1,6 @@
 #!env python
 
-"""Chat client for CST311 Programming Assignment 3 - Extra Credit """
+"""Chat client for CST311 Programming Assignment 3"""
 __author__ = "[Group 4]"
 __credits__ = [
     "Chris Tangonan",
@@ -44,10 +44,6 @@ def main():
         # Establish TCP connection
         client_socket.connect((server_name,server_port))
 
-        #get username and send to server
-        username = input("enter your username: ")
-        client_socket.send(username.encode())
-
         # Create a thread that receives incoming messages from server and prints them
         threading.Thread(target=incoming_message_handler, args=(client_socket,)).start()
     except Exception as e:
@@ -66,21 +62,18 @@ def main():
 
     try:
         #keep the connection open as long as the message is not 'bye'
-        while user_input!='bye':
-            # Set data across socket to server
-            #  Note: encode() converts the string to UTF-8 for transmission
+        while user_input != 'bye':
+            # Send data across socket to server
             client_socket.send(user_input.encode())
 
             # Get input from user
             user_input = input()
 
     finally:
-        #set user_input to 'bye' so server recieves final message
+        # Send final 'bye' message
         user_input = 'bye'
-        # Set data across socket to server
-        #  Note: encode() converts the string to UTF-8 for transmission
         client_socket.send(user_input.encode())
-        # Close socket prior to exit
+        # Close socket before exit
         client_socket.close()
 
 # This helps shield code from running when we import the module
