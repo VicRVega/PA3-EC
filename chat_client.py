@@ -44,6 +44,10 @@ def main():
         # Establish TCP connection
         client_socket.connect((server_name,server_port))
 
+        #get username and send to server
+        username = input("enter your username: ")
+        client_socket.send(username.encode())
+
         # Create a thread that receives incoming messages from server and prints them
         threading.Thread(target=incoming_message_handler, args=(client_socket,)).start()
     except Exception as e:
