@@ -30,7 +30,16 @@ connection_socketY = None
 addresses = []
 
 def connection_handler(connection_socket, address):
-    global connection_socketX, connection_socketY
+    global connection_socketX, connection_socketY, clientXName, clientYName
+
+    username = connection_socket.recv(1024).decode()
+
+    if connection_socket == connection_socketX:
+        clientXName = username
+    else:
+        clientYName = username
+
+    log.info("f{username connected from {address}")
 
     while True:
         #  Read data from the new connection socket
