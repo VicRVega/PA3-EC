@@ -1,6 +1,6 @@
 #!env python
 
-"""Chat client for CST311 Programming Assignment 3"""
+"""Chat client for CST311 Programming Assignment 3 - Extra Credit"""
 __author__ = "[Group 4]"
 __credits__ = [
     "Chris Tangonan",
@@ -22,6 +22,7 @@ log.setLevel(logging.DEBUG)
 # Set global variables
 server_name = '10.0.0.1' # should we set to have node h1 running server code correct?
 server_port = 12000
+username = ""
 
 # Add handler for a thread that receives incoming messages from server and prints them
 def incoming_message_handler(client_socket):
@@ -37,12 +38,19 @@ def incoming_message_handler(client_socket):
             break
 
 def main():
+    global username
+    #get username from user
+    username = input("Enter your username: ")
+
     # Create socket
     client_socket = s.socket(s.AF_INET, s.SOCK_STREAM)
 
     try:
         # Establish TCP connection
         client_socket.connect((server_name,server_port))
+
+        #sender username to server
+        client_socket.send(username.encode())
 
         # Create a thread that receives incoming messages from server and prints them
         threading.Thread(target=incoming_message_handler, args=(client_socket,)).start()
@@ -62,18 +70,21 @@ def main():
 
     try:
         #keep the connection open as long as the message is not 'bye'
-        while user_input != 'bye':
-            # Send data across socket to server
-            client_socket.send(user_input.encode())
+        while user_input!='bye':
+            # Set data across socket to server
+            #  Note: encode() converts the string to UTF-8 for transmission
+            client_socket.send(f"{username}: {user_input}".encode())
 
             # Get input from user
             user_input = input()
 
     finally:
-        # Send final 'bye' message
+        #set user_input to 'bye' so server recieves final message
         user_input = 'bye'
-        client_socket.send(user_input.encode())
-        # Close socket before exit
+        # Set data across socket to server
+        #  Note: encode() converts the string to UTF-8 for transmission
+        client_socket.send(f"{username}: {user_input}".encode())
+        # Close socket prior to exit
         client_socket.close()
 
 # This helps shield code from running when we import the module
